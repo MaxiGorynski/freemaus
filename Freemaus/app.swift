@@ -2,6 +2,29 @@ import Cocoa
 import Foundation
 import AppKit
 
+class FreemausAppDelegate: NSObject, NSApplicationDelegate {
+    private var mouseController: MouseController?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        print("Application did finish launching.")
+        mouseController = MouseController()
+        mouseController?.startMouseMovement()
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        mouseController?.stopMouseMovement()
+    }
+
+    struct FreemausAppMain {
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = FreemausAppDelegate()
+        app.delegate = delegate
+        app.run()
+    }
+}
+}
+
 class MouseController: NSObject {
     private var timer: Timer?
     private var shouldStop = false
@@ -62,6 +85,7 @@ class MouseController: NSObject {
     }
 
     private func createStatusWindow() {
+        print("Creating status window...")
         let screenSize = NSScreen.main?.frame.size ?? CGSize(width: 1920, height: 1080)
         let windowWidth: CGFloat = 300
         let windowHeight: CGFloat = 100
@@ -84,18 +108,7 @@ class MouseController: NSObject {
     }
 
     private func updateStatusLabel() {
+        print("Updating status label...")
         statusLabel?.stringValue = "Freemaus is taking care of it. Hit any key to disable\nTime Until Next Click: \(Int(timeUntilNextClick)) seconds"
     }
 }
-
-let mouseController = MouseController()
-mouseController.startMouseMovement()
-
-RunLoop.main.run()
-//
-//  app.swift
-//  Freemaus
-//
-//  Created by Supriya Rai on 06/12/2024.
-//
-
